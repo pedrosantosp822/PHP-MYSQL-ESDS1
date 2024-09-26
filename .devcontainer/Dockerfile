@@ -14,6 +14,12 @@ RUN mkdir -p /var/www/html
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copiar o script para o diretório /workspaces
+COPY .devcontainer/export_db.sh /workspaces/export_db.sh
+
+# Tornar o script executável
+RUN chmod +x /workspaces/export_db.sh
+
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
