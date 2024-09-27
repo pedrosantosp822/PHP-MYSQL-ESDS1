@@ -1,29 +1,32 @@
-FROM mcr.microsoft.com/devcontainers/php:1-8.2-bookworm
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php-mariadb
+{
+	"name": "PHP & MariaDB",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-# Install MariaDB client
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y mariadb-client \ 
-    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
 
-# Install php-mysql driver
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+	// For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
+	"forwardPorts": [
+		8080,
+		8081,
+		3306
+	],
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
 
-# Create the /var/www/html directory
-RUN mkdir -p /var/www/html
+	// Use 'postCreateCommand' to run commands after the container is created.
+	//"postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+	// Configure tool-specific properties.
+	// "customizations": {},
 
-# Copiar o script para o diretório /workspaces
-COPY .devcontainer/export_db.sh /workspaces/export_db.sh
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
 
-# Tornar o script executável
-RUN chmod +x /workspaces/export_db.sh
-
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
-
-# [Optional] Uncomment this line to install global node packages.
-# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
 
